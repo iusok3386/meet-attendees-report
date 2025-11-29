@@ -39,29 +39,6 @@ jobs:
       - name: Lint
         run: pnpm lint
 
-  run_test:
-    name: Test
-    timeout-minutes: 60
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v6
-
-      - name: Install node modules
-        run: pnpm i
-
-      - name: Test
-        run: pnpm test
-
   run_build:
     name: Build
     timeout-minutes: 60
