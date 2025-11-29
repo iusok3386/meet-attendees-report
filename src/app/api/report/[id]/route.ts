@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   _request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const session = await getServerSession(authOptions);
   const { id } = await params;
@@ -16,16 +16,22 @@ export async function GET(
 
   try {
     const conferenceRecordName = `conferenceRecords/${id}`;
-    const participants = await getConferenceParticipants(session.accessToken, conferenceRecordName);
+    const participants = await getConferenceParticipants(
+      session.accessToken,
+      conferenceRecordName,
+    );
 
     const reportData = await Promise.all(
       participants.map(async (participant: any) => {
-        const sessions = await getParticipantSessions(session.accessToken!, participant.name);
+        const sessions = await getParticipantSessions(
+          session.accessToken!,
+          participant.name,
+        );
         return {
           participant,
           sessions,
         };
-      })
+      }),
     );
 
     return NextResponse.json(reportData);
