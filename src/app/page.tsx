@@ -39,6 +39,12 @@ export default function Home() {
     }
   }, [session]);
 
+  useEffect(() => {
+    if (session?.error === "RefreshAccessTokenError") {
+      signOut({ callbackUrl: "/" }); // Force sign out to clear bad session
+    }
+  }, [session]);
+
   if (!session) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center p-24 bg-gray-50 dark:bg-gray-900">

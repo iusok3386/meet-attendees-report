@@ -51,8 +51,10 @@ export default function ReportPage() {
             }
 
             // Fallback to ID if name is missing or empty
+            // participant.name is the resource name (e.g. conferenceRecords/.../participants/...)
             if (!displayName || displayName === "Unknown") {
-              displayName = item.participant.name.split("/").pop() || "Unknown";
+              displayName =
+                item.participant.name?.split("/").pop() ?? "Unknown";
             }
 
             return {
