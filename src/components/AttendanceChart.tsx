@@ -58,7 +58,7 @@ export default function AttendanceChart({ data }: Props) {
             Participant
           </div>
           <div className="w-3/4 relative h-6">
-            {ticks.map((tick, i) => (
+            {ticks.map((tick) => (
               <div
                 key={tick}
                 className="absolute text-xs text-gray-500 transform -translate-x-1/2"

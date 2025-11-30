@@ -5,11 +5,26 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import AttendanceChart from "@/components/AttendanceChart";
 
+interface Session {
+  startTime: string;
+  endTime: string;
+}
+
+interface ParticipantData {
+  participant: {
+    name: string;
+    signedinUser?: { displayName?: string; user?: string };
+    anonymousUser?: { displayName?: string };
+    phoneUser?: { displayName?: string };
+  };
+  sessions: Session[];
+}
+
 export default function ReportPage() {
   const { data: session } = useSession();
   const params = useParams();
   const id = params?.id as string;
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<ParticipantData[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -20,13 +35,14 @@ export default function ReportPage() {
         if (res.ok) {
           const reportData = await res.json();
           // Process names here if needed
-          const processedData = reportData.map((item: any) => {
+          const processedData = reportData.map((item: ParticipantData) => {
             // Try to find a display name
             let displayName = "Unknown";
             if (item.participant.signedinUser) {
               displayName =
                 item.participant.signedinUser.displayName ||
-                item.participant.signedinUser.user;
+                item.participant.signedinUser.user ||
+                "Unknown";
             } else if (item.participant.anonymousUser) {
               displayName =
                 item.participant.anonymousUser.displayName || "Anonymous";
@@ -35,8 +51,8 @@ export default function ReportPage() {
             }
 
             // Fallback to ID if name is missing or empty
-            if (!displayName) {
-              displayName = item.participant.name.split("/").pop();
+            if (!displayName || displayName === "Unknown") {
+              displayName = item.participant.name.split("/").pop() || "Unknown";
             }
 
             return {

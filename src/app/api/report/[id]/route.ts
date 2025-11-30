@@ -1,4 +1,5 @@
 import { getServerSession } from "next-auth";
+import { meet_v2 } from "googleapis";
 import { authOptions } from "@/lib/auth";
 import { getConferenceParticipants, getParticipantSessions } from "@/lib/meet";
 import { NextResponse } from "next/server";
@@ -22,7 +23,8 @@ export async function GET(
     );
 
     const reportData = await Promise.all(
-      participants.map(async (participant: any) => {
+      participants.map(async (participant: meet_v2.Schema$Participant) => {
+        if (!participant.name) return null;
         const sessions = await getParticipantSessions(
           session.accessToken!,
           participant.name,
@@ -34,7 +36,10 @@ export async function GET(
       }),
     );
 
-    return NextResponse.json(reportData);
+    // Filter out nulls
+    const validReportData = reportData.filter((item) => item !== null);
+
+    return NextResponse.json(validReportData);
   } catch (error) {
     console.error(error);
     return new NextResponse("Internal Server Error", { status: 500 });
