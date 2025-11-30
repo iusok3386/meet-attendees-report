@@ -17,18 +17,23 @@ export default function Home() {
   const { data: session } = useSession();
   const [conferences, setConferences] = useState<ConferenceRecord[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchConferences = async () => {
       setLoading(true);
+      setError(null);
       try {
         const res = await fetch("/api/conferences");
         if (res.ok) {
           const data = await res.json();
           setConferences(data);
+        } else {
+          setError("Failed to fetch conferences. Please try again later.");
         }
       } catch (error) {
         console.error("Failed to fetch conferences", error);
+        setError("An unexpected error occurred. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -99,6 +104,12 @@ export default function Home() {
             </button>
           </div>
         </div>
+
+        {error && (
+          <div className="mb-8 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-300">
+            {error}
+          </div>
+        )}
 
         {loading ? (
           <div className="flex justify-center py-20">

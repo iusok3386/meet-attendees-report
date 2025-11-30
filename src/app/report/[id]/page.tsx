@@ -13,6 +13,7 @@ interface Session {
 interface ParticipantData {
   participant: {
     name: string;
+    displayName?: string;
     signedinUser?: { displayName?: string; user?: string };
     anonymousUser?: { displayName?: string };
     phoneUser?: { displayName?: string };
@@ -61,7 +62,7 @@ export default function ReportPage() {
               ...item,
               participant: {
                 ...item.participant,
-                name: displayName, // Override name for chart display
+                displayName: displayName, // Use a new property for display name
               },
             };
           });

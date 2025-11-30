@@ -10,6 +10,7 @@ interface Session {
 interface ParticipantData {
   participant: {
     name: string;
+    displayName?: string;
     signedinUser?: { displayName?: string; user?: string };
     anonymousUser?: { displayName?: string };
     phoneUser?: { displayName?: string };
@@ -76,7 +77,9 @@ export default function AttendanceChart({ data }: Props) {
         <div className="space-y-2">
           {data.map((p, index) => {
             const pName =
-              p.participant.name.split("/").pop() || `Participant ${index + 1}`;
+              p.participant.displayName ||
+              p.participant.name.split("/").pop() ||
+              `Participant ${index + 1}`;
             return (
               <div
                 key={index}
